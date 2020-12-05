@@ -5,7 +5,7 @@ dotenv.config({path: "./config.env"});
 const app = require("./app");
 
 
-mongoose.connect("", {
+mongoose.connect(process.env.DATABASE, {
     useNewUrlParser: true,
     useCreateIndex: true,
     useFindAndModify: false,
