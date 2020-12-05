@@ -1,6 +1,9 @@
 const mongoose = require("mongoose");
+const dotenv = require("dotenv");
 
+dotenv.config({path: "./config.env"});
 const app = require("./app");
+
 
 mongoose.connect("", {
     useNewUrlParser: true,
@@ -9,7 +12,7 @@ mongoose.connect("", {
 }).then(() => {
     console.log("DB Connection Successful");
 }).catch(() => {
-    console.log("DB Connection not successful");
+    console.log("DB Connection not sucessful");
 });
 
 const PORT = process.env.PORT || 3000;
