@@ -1,3 +1,13 @@
 const express = require("express");
-const User = require("../models/userModel");
 const router = express.Router();
+const userController = require("../controllers/userController");
+
+//Add authentication later
+router.route("/").get(userController.getAllUsers);
+router
+  .route("/:id")
+  .get(userController.getUser)
+  .put(userController.updateUser)
+  .delete(userController.deleteUser);
+
+module.exports = router;

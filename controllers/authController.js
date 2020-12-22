@@ -168,10 +168,10 @@ exports.protectRoutes = async (req, res, next) => {
     }
 
     if (!token) {
-      next(new AppError("You are not authenticated", 400));
+      next(new AppError("You are not authenticated", 401));
     }
 
-    const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+    const decodedToken = await jwt.verify(token, process.env.JWT_SECRET);
 
     //Check if user exists
     const user = await User.findById(decodedToken.id);
@@ -179,6 +179,7 @@ exports.protectRoutes = async (req, res, next) => {
       next(new AppError("User does not exist", 401));
     }
     req.user = user;
+    //console.log("protect", req.user);
     next();
   } catch (err) {
     next(err);
@@ -188,7 +189,7 @@ exports.protectRoutes = async (req, res, next) => {
 exports.restrictTo = (...roles) => {
   return (req, res, next) => {
     if (!roles.includes(req.user.role)) {
-      return next(new AppError("User not authorized", 400));
+      return next(new AppError("User not authorized", 401));
     }
     next();
   };

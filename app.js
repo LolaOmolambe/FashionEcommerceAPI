@@ -9,6 +9,8 @@ const hpp = require("hpp");
 const AppError = require("./utils/appError");
 const globalErrorHandler = require("./controllers/errorController");
 const authRoutes = require("./routes/authRoutes");
+const userRoutes = require("./routes/userRoutes");
+const customerRoutes = require("./routes/customerRoutes");
 
 const app = express();
 
@@ -42,6 +44,8 @@ app.use(xss());
 
 //Routes
 app.use("/api/v1/auth", authRoutes);
+app.use("/api/v1/user", userRoutes);
+app.use("/api/v1/customer", customerRoutes);
 
 app.all("*", (req,res, next) => {
     next(new AppError(`Route ${req.originalUrl} does not exist`, 404));

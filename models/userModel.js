@@ -41,25 +41,35 @@ const userSchema = new mongoose.Schema(
       },
     },
     isVerified: {
-        type: Boolean,
-        default: false
-    }
+      type: Boolean,
+      default: false,
+    },
+    isDeleted: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );
 
-userSchema.pre("save", async function(next) {
+userSchema.pre("save", async function (next) {
   //This makes it run only when password has been changed
-    if(!this.isModified("password")) {
-      return next();
-    }
-    this.password = await bcrypt.hash(this.password, 12);
-    this.passwordConfirm = undefined;
+  if (!this.isModified("password")) {
+    return next();
+  }
+  this.password = await bcrypt.hash(this.password, 12);
+  this.passwordConfirm = undefined;
+  next();
 });
 
-userSchema.methods.correctPassword = async function(input, userPassword) {
-    return await bcrypt.compare(input, userPassword);
-}
+userSchema.pre(/^find/, function(next) {
+  this.find({isDeleted: {$ne: true}});
+  next();
+})
+
+userSchema.methods.correctPassword = async function (input, userPassword) {
+  return await bcrypt.compare(input, userPassword);
+};
 
 const User = mongoose.model("User", userSchema);
 module.exports = User;
